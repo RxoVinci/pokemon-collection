@@ -1,0 +1,510 @@
+:root {
+    --bg-principal: #f4f4f4;
+    --bg-secondaire: #ffffff;
+    --texte-principal: #1a1a2e;
+    --texte-secondaire: #555;
+    --rouge: #ef233c;
+    --rouge-fonce: #c1121f;
+    --jaune: #ffd60a;
+    --bleu-sombre: #1a1a2e;
+    --gris-clair: #e9ecef;
+    --ombre: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --radius: 12px;
+    --transition: 0.3s ease;
+}
+
+body.dark {
+    --bg-principal: #0f0f1a;
+    --bg-secondaire: #1a1a2e;
+    --texte-principal: #ffffff;
+    --texte-secondaire: #b0b0b0;
+    --gris-clair: #2a2a3e;
+    --ombre: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--bg-principal);
+    color: var(--texte-principal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+header {
+    background-color: var(--bg-secondaire);
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--ombre);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    color: var(--texte-principal);
+    text-decoration: none;
+    font-size: 1.5em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo span {
+    background: linear-gradient(90deg, var(--rouge), var(--jaune));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+nav {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+nav a {
+    color: var(--texte-principal);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.05em;
+    transition: color var(--transition);
+    position: relative;
+}
+
+nav a:hover {
+    color: var(--rouge);
+}
+
+nav a.actif {
+    color: var(--jaune);
+    font-weight: bold;
+}
+
+.theme-btn {
+    background: none;
+    border: 2px solid var(--jaune);
+    color: var(--jaune);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: transform var(--transition);
+}
+
+.theme-btn:hover {
+    transform: rotate(20deg);
+}
+
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--texte-principal);
+    font-size: 1.8em;
+    cursor: pointer;
+}
+
+main {
+    flex: 1;
+    padding: 40px 30px;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.hero {
+    text-align: center;
+    padding: 80px 20px 60px;
+}
+
+.hero h1 {
+    font-size: 3em;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, var(--rouge), var(--jaune));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInDown 0.8s ease;
+}
+
+.hero p {
+    font-size: 1.2em;
+    color: var(--texte-secondaire);
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.form-container {
+    max-width: 480px;
+    margin: 60px auto;
+    background: var(--bg-secondaire);
+    padding: 45px 40px;
+    border-radius: var(--radius);
+    box-shadow: var(--ombre);
+    animation: fadeInUp 0.6s ease;
+}
+
+.form-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+    color: var(--texte-principal);
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--texte-principal);
+    font-size: 0.95em;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    border: 2px solid var(--gris-clair);
+    border-radius: var(--radius);
+    font-size: 1em;
+    background: var(--bg-principal);
+    color: var(--texte-principal);
+    transition: border-color var(--transition);
+}
+
+.form-container input:focus {
+    outline: none;
+    border-color: var(--rouge);
+}
+
+.form-container button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(90deg, var(--rouge), var(--rouge-fonce));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow var(--transition);
+    margin-top: 10px;
+}
+
+.form-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 35, 60, 0.4);
+}
+
+.form-container .lien {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--texte-secondaire);
+}
+
+.form-container .lien a {
+    color: var(--rouge);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.form-container .lien a:hover {
+    text-decoration: underline;
+}
+
+.erreur {
+    background: linear-gradient(90deg, #ffe0e0, #ffcccc);
+    color: var(--rouge-fonce);
+    padding: 12px 15px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+    border-left: 4px solid var(--rouge);
+}
+
+.succes {
+    background: linear-gradient(90deg, #d4edda, #c3e6cb);
+    color: #155724;
+    padding: 12px 15px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+    border-left: 4px solid #28a745;
+}
+
+.grille-cartes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.carte-pokemon {
+    background: var(--bg-secondaire);
+    border-radius: var(--radius);
+    box-shadow: var(--ombre);
+    padding: 20px 15px;
+    text-align: center;
+    transition: transform var(--transition), box-shadow var(--transition);
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--texte-principal);
+    position: relative;
+    overflow: hidden;
+}
+
+.carte-pokemon::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--rouge), var(--jaune));
+}
+
+.carte-pokemon:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(239, 35, 60, 0.2);
+}
+
+.carte-pokemon img {
+    width: 130px;
+    height: 130px;
+    transition: transform var(--transition);
+}
+
+.carte-pokemon:hover img {
+    transform: scale(1.1);
+}
+
+.carte-pokemon h3 {
+    margin-top: 12px;
+    font-size: 1.1em;
+    text-transform: capitalize;
+    color: var(--texte-principal);
+}
+
+.carte-pokemon .type {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.8em;
+    margin-top: 8px;
+    background: linear-gradient(90deg, var(--rouge), var(--jaune));
+    font-weight: bold;
+}
+
+.detail-carte {
+    max-width: 650px;
+    margin: 40px auto;
+    text-align: center;
+    background: var(--bg-secondaire);
+    padding: 45px;
+    border-radius: var(--radius);
+    box-shadow: var(--ombre);
+    animation: fadeInUp 0.6s ease;
+}
+
+.detail-carte img {
+    width: 220px;
+    height: 220px;
+    animation: pulse 3s infinite ease-in-out;
+}
+
+.detail-carte h1 {
+    text-transform: capitalize;
+    margin: 20px 0;
+    font-size: 2.2em;
+    background: linear-gradient(90deg, var(--rouge), var(--jaune));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.stat {
+    background: var(--gris-clair);
+    padding: 15px 25px;
+    border-radius: var(--radius);
+    min-width: 130px;
+}
+
+.stat strong {
+    color: var(--rouge);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.booster-section {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.booster-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, var(--rouge), var(--jaune));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.booster-section p {
+    color: var(--texte-secondaire);
+    font-size: 1.1em;
+    margin-bottom: 30px;
+}
+
+.btn-booster {
+    background: linear-gradient(90deg, var(--rouge), var(--rouge-fonce));
+    color: white;
+    padding: 18px 50px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform var(--transition), box-shadow var(--transition);
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.btn-booster:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(239, 35, 60, 0.4);
+}
+
+.btn-booster:disabled {
+    background: #999;
+    cursor: not-allowed;
+    animation: none;
+}
+
+.titre-page {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    background: linear-gradient(90deg, var(--rouge), var(--jaune));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+footer {
+    background: var(--bg-secondaire);
+    color: var(--texte-secondaire);
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: auto;
+    border-top: 3px solid;
+    border-image: linear-gradient(90deg, var(--rouge), var(--jaune)) 1;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    nav {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 260px;
+        height: 100vh;
+        background-color: var(--bg-secondaire);
+        flex-direction: column;
+        padding: 80px 30px 30px;
+        z-index: 99;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+        transform: translateX(100%);
+        transition: transform var(--transition);
+    }
+
+    nav.ouvert {
+        display: flex;
+        transform: translateX(0);
+    }
+
+    .hero h1 {
+        font-size: 2em;
+    }
+
+    .grille-cartes {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .carte-pokemon img {
+        width: 100px;
+        height: 100px;
+    }
+}

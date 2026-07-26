@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $erreur = "Cet email est déjà utilisé.";
         } else {
             $hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
-            $insert = $pdo->prepare("INSERT INTO utilisateurs (pseudo, email, mot_de_passe) VALUES (?, ?, ?)");
+            $insert = $pdo->prepare("INSERT INTO utilisateurs (pseudo, email, mot_de_passe, points, dernier_reset) VALUES (?, ?, ?, 7000, CURDATE())");
             $insert->execute([$pseudo, $email, $hash]);
             $succes = "Inscription réussie ! Tu peux maintenant te connecter.";
         }

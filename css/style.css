@@ -1,5 +1,5 @@
 :root {
-    --bg-principal: #f4f4f4;
+    --bg-principal: #faf9f7;
     --bg-secondaire: #ffffff;
     --texte-principal: #1a1a2e;
     --texte-secondaire: #555;
@@ -125,62 +125,50 @@ main {
 }
 
 .hero {
+    background: linear-gradient(135deg, #ffd60a 0%, #ef233c 100%);
+    border-radius: var(--radius);
+    padding: 80px 40px;
     text-align: center;
-    padding: 80px 20px 60px;
+    margin-bottom: 60px;
+    color: white;
 }
 
 .hero h1 {
-    font-size: 3em;
+    font-size: 3.2em;
     margin-bottom: 15px;
-    background: linear-gradient(90deg, var(--rouge), var(--jaune));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: fadeInDown 0.8s ease;
+    font-weight: bold;
 }
 
 .hero p {
-    font-size: 1.2em;
-    color: var(--texte-secondaire);
-    max-width: 600px;
-    margin: 0 auto;
-    animation: fadeInUp 0.8s ease;
+    font-size: 1.3em;
+    margin-bottom: 30px;
+    opacity: 0.95;
 }
 
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.hero .btn-hero {
+    background: white;
+    color: var(--rouge);
+    padding: 16px 50px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform var(--transition), box-shadow var(--transition);
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.hero .btn-hero:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-@keyframes pulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
+.section-titre {
+    font-size: 2.5em;
+    text-align: center;
+    margin: 60px 0 40px;
+    color: var(--texte-principal);
 }
 
 .form-container {
@@ -256,12 +244,8 @@ main {
     text-decoration: none;
 }
 
-.form-container .lien a:hover {
-    text-decoration: underline;
-}
-
 .erreur {
-    background: linear-gradient(90deg, #ffe0e0, #ffcccc);
+    background-color: #ffe0e0;
     color: var(--rouge-fonce);
     padding: 12px 15px;
     border-radius: var(--radius);
@@ -272,7 +256,7 @@ main {
 }
 
 .succes {
-    background: linear-gradient(90deg, #d4edda, #c3e6cb);
+    background-color: #d4edda;
     color: #155724;
     padding: 12px 15px;
     border-radius: var(--radius);
@@ -284,7 +268,7 @@ main {
 
 .grille-cartes {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 25px;
     margin-top: 30px;
 }
@@ -301,6 +285,8 @@ main {
     color: var(--texte-principal);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .carte-pokemon::before {
@@ -321,6 +307,7 @@ main {
 .carte-pokemon img {
     width: 130px;
     height: 130px;
+    margin: 0 auto;
     transition: transform var(--transition);
 }
 
@@ -330,9 +317,10 @@ main {
 
 .carte-pokemon h3 {
     margin-top: 12px;
-    font-size: 1.1em;
+    font-size: 1em;
     text-transform: capitalize;
     color: var(--texte-principal);
+    flex-grow: 1;
 }
 
 .carte-pokemon .type {
@@ -340,10 +328,40 @@ main {
     padding: 4px 12px;
     border-radius: 20px;
     color: white;
-    font-size: 0.8em;
+    font-size: 0.75em;
     margin-top: 8px;
     background: linear-gradient(90deg, var(--rouge), var(--jaune));
     font-weight: bold;
+}
+
+.carte-pokemon .points {
+    display: block;
+    margin-top: 8px;
+    font-weight: bold;
+    color: var(--rouge);
+    font-size: 0.9em;
+}
+
+.btn-collecter {
+    background-color: var(--rouge);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background-color var(--transition);
+    font-weight: bold;
+}
+
+.btn-collecter:hover {
+    background-color: var(--rouge-fonce);
+}
+
+.btn-collecter:disabled {
+    background-color: #999;
+    cursor: not-allowed;
 }
 
 .detail-carte {
@@ -360,7 +378,6 @@ main {
 .detail-carte img {
     width: 220px;
     height: 220px;
-    animation: pulse 3s infinite ease-in-out;
 }
 
 .detail-carte h1 {
@@ -426,7 +443,6 @@ main {
     text-decoration: none;
     display: inline-block;
     transition: transform var(--transition), box-shadow var(--transition);
-    animation: pulse 2s infinite ease-in-out;
 }
 
 .btn-booster:hover {
@@ -437,7 +453,17 @@ main {
 .btn-booster:disabled {
     background: #999;
     cursor: not-allowed;
-    animation: none;
+}
+
+.points-display {
+    background: linear-gradient(135deg, var(--rouge), var(--jaune));
+    color: white;
+    padding: 20px 30px;
+    border-radius: var(--radius);
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 .titre-page {
@@ -448,6 +474,27 @@ main {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+.btn-filtre {
+    padding: 10px 20px;
+    margin: 5px;
+    background: var(--bg-secondaire);
+    color: var(--texte-principal);
+    border: 2px solid var(--rouge);
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.3s;
+    opacity: 0.6;
+}
+
+.btn-filtre:first-child {
+    opacity: 1;
+}
+
+.btn-filtre:hover {
+    opacity: 1;
 }
 
 footer {
@@ -462,6 +509,18 @@ footer {
 
 footer p {
     margin: 5px 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 768px) {
@@ -494,6 +553,10 @@ footer p {
         transform: translateX(0);
     }
 
+    .hero {
+        padding: 50px 20px;
+    }
+
     .hero h1 {
         font-size: 2em;
     }
@@ -507,25 +570,4 @@ footer p {
         width: 100px;
         height: 100px;
     }
-}
-
-.btn-filtre {
-    padding: 10px 20px;
-    margin: 5px;
-    background: var(--bg-secondaire);
-    color: var(--texte-principal);
-    border: 2px solid var(--rouge);
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: opacity 0.3s;
-    opacity: 0.6;
-}
-
-.btn-filtre:first-child {
-    opacity: 1;
-}
-
-.btn-filtre:hover {
-    opacity: 1;
 }

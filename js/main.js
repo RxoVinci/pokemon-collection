@@ -1,30 +1,34 @@
-var hamburger = document.getElementById("hamburger");
-var menu = document.getElementById("menu");
+var boutonTheme = document.getElementById("theme-btn");
 
-if (hamburger) {
-    hamburger.addEventListener("click", function () {
-        menu.classList.toggle("ouvert");
+if (localStorage.getItem("theme") === "clair") {
+    document.body.classList.add("clair");
+    boutonTheme.textContent = "🌙";
+}
+
+boutonTheme.addEventListener("click", function () {
+    document.body.classList.toggle("clair");
+    if (document.body.classList.contains("clair")) {
+        boutonTheme.textContent = "🌙";
+        localStorage.setItem("theme", "clair");
+    } else {
+        boutonTheme.textContent = "☀️";
+        localStorage.setItem("theme", "sombre");
+    }
+});
+
+var boutonHamburger = document.getElementById("hamburger");
+var menu = document.getElementById("menu");
+var boutonFermer = document.getElementById("fermer-menu");
+
+if (boutonHamburger) {
+    boutonHamburger.addEventListener("click", function () {
+        menu.classList.add("ouvert");
     });
 }
 
-var themeBtn = document.getElementById("theme-btn");
-var body = document.body;
-
-if (localStorage.getItem("theme") === "dark") {
-    body.classList.add("dark");
-    if (themeBtn) themeBtn.textContent = "☀️";
-}
-
-if (themeBtn) {
-    themeBtn.addEventListener("click", function () {
-        body.classList.toggle("dark");
-        if (body.classList.contains("dark")) {
-            themeBtn.textContent = "☀️";
-            localStorage.setItem("theme", "dark");
-        } else {
-            themeBtn.textContent = "🌙";
-            localStorage.setItem("theme", "light");
-        }
+if (boutonFermer) {
+    boutonFermer.addEventListener("click", function () {
+        menu.classList.remove("ouvert");
     });
 }
 
@@ -35,7 +39,6 @@ if (champEmail) {
     if (emailSauve) {
         champEmail.value = emailSauve;
     }
-
     champEmail.addEventListener("input", function () {
         localStorage.setItem("email_connexion", champEmail.value);
     });

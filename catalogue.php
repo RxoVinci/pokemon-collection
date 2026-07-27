@@ -1,6 +1,4 @@
 <?php require_once "includes/db.php"; ?>
-<?php require_once "includes/header.php"; ?>
-
 <?php
 $utilisateur_id = isset($_SESSION["utilisateur_id"]) ? $_SESSION["utilisateur_id"] : null;
 $userPoints = 0;
@@ -20,7 +18,7 @@ if ($utilisateur_id) {
     }
 }
 
-if ($utilisateur_id && $_SERVER["REQUEST_METHOD"] == "POST") {
+if ($utilisateur_id && $_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["pokemon_id"])) {
     $pokemon_id = intval($_POST["pokemon_id"]);
     $cout = intval($_POST["cout"]);
     
@@ -35,119 +33,117 @@ if ($utilisateur_id && $_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+<?php require_once "includes/header.php"; ?>
 
-<h1 class="titre-page">Catalogue Pokémon</h1>
+<h1 class="titre-section">Le catalogue</h1>
 
 <?php if ($utilisateur_id) : ?>
-    <div class="points-display">
-        💎 Vos points : <?= $userPoints ?> / 7000
-    </div>
+    <div class="points-display">💎 Vos points : <?= $userPoints ?> / 7000</div>
+<?php else : ?>
+    <div class="points-display"><a href="connexion.php" style="color:white;">Connecte-toi pour collecter des cartes</a></div>
 <?php endif; ?>
 
-<div style="text-align: center; margin-bottom: 30px;">
-    <button class="btn-filtre" data-type="all">Tous</button>
-    <button class="btn-filtre" data-type="fire">🔥 Feu</button>
-    <button class="btn-filtre" data-type="water">💧 Eau</button>
-    <button class="btn-filtre" data-type="grass">🌿 Plante</button>
-    <button class="btn-filtre" data-type="electric">⚡ Électrique</button>
-    <button class="btn-filtre" data-type="ice">❄️ Glace</button>
-    <button class="btn-filtre" data-type="fighting">👊 Combat</button>
-    <button class="btn-filtre" data-type="poison">☠️ Poison</button>
+<div class="recherche">
+    <input type="text" id="barre-recherche" placeholder="Rechercher un Pokémon...">
 </div>
 
-<div class="grille-cartes" id="grille-cartes">
-    <p>Chargement des Pokémon...</p>
+<div class="filtres" id="filtres">
+    <button class="filtre-btn actif" data-type="tous">Tous</button>
+    <button class="filtre-btn" data-type="fire">Feu 🔥</button>
+    <button class="filtre-btn" data-type="water">Eau 💧</button>
+    <button class="filtre-btn" data-type="grass">Plante 🌿</button>
+    <button class="filtre-btn" data-type="electric">Électrique ⚡</button>
+    <button class="filtre-btn" data-type="normal">Normal ⭐</button>
 </div>
+
+<p class="chargement" id="chargement">Chargement des Pokémon...</p>
+
+<div class="grille" id="liste-catalogue"></div>
 
 <script>
-var typeFilter = "all";
-var allPokemon = [];
+var tousLesPokemons = [];
+var typeActuel = "tous";
+var rechercheActuelle = "";
 var utilisateur_id = <?= json_encode($utilisateur_id) ?>;
 var userPoints = <?= json_encode($userPoints) ?>;
 
-var couts = {
-    1: 500, 2: 500, 3: 2000, 4: 2000, 5: 3000, 6: 8000, 7: 500, 8: 2000, 9: 2000,
-    10: 500, 11: 2000, 12: 2000, 13: 500, 14: 500, 15: 2000, 16: 500, 17: 2000, 18: 3000,
-    19: 500, 20: 2000, 21: 500, 22: 2000, 23: 1000, 24: 2000, 25: 2000, 26: 3000
-};
-
 function getCout(id) {
-    return couts[id] || (Math.random() < 0.5 ? 500 : (Math.random() < 0.7 ? 2000 : 8000));
+    if (id % 25 === 0) return 15000;
+    if (id % 10 === 0) return 8000;
+    if (id % 5 === 0) return 3000;
+    if (id % 3 === 0) return 2000;
+    return 500;
 }
 
-function getTypeEmoji(type) {
-    var emojis = {
-        "fire": "🔥", "water": "💧", "grass": "🌿", "electric": "⚡",
-        "ice": "❄️", "fighting": "👊", "poison": "☠️", "ground": "⛰️",
-        "flying": "🦅", "psychic": "🧠", "bug": "🐛", "rock": "🪨"
-    };
-    return emojis[type] || "•";
+function creerCarte(pokemon) {
+    var typePrincipal = pokemon.types[0].type.name;
+    var image = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + pokemon.id + ".png";
+    var cout = getCout(pokemon.id);
+    
+    var btnHTML = "";
+    if (utilisateur_id) {
+        var disabled = userPoints < cout ? "disabled" : "";
+        btnHTML = '<form method="POST" style="width:100%;" onclick="event.stopPropagation();">' +
+            '<input type="hidden" name="pokemon_id" value="' + pokemon.id + '">' +
+            '<input type="hidden" name="cout" value="' + cout + '">' +
+            '<button type="submit" class="btn-collecter" ' + disabled + '>Collecter</button>' +
+            '</form>';
+    }
+    
+    return '<div class="carte-pokemon">' +
+        '<a href="carte.php?id=' + pokemon.id + '" style="text-decoration:none; color:inherit; width:100%;">' +
+        '<img src="' + image + '" alt="' + pokemon.name + '">' +
+        '<h3>' + pokemon.name + '</h3>' +
+        '<span class="type-badge type-' + typePrincipal + '">' + typePrincipal + '</span>' +
+        '<div class="points-carte">💎 ' + cout + ' pts</div>' +
+        '</a>' +
+        btnHTML +
+        '</div>';
 }
 
-function displayPokemon() {
-    var grille = document.getElementById("grille-cartes");
-    grille.innerHTML = "";
-
-    var filtered = allPokemon.filter(function(pokemon) {
-        if (typeFilter === "all") return true;
-        return pokemon.types && pokemon.types.some(function(t) {
-            return t.type.name === typeFilter;
-        });
+function afficherPokemons() {
+    var grille = document.getElementById("liste-catalogue");
+    var filtres = tousLesPokemons.filter(function(p) {
+        if (typeActuel === "tous") return true;
+        return p.types[0].type.name === typeActuel;
     });
-
-    filtered.forEach(function(pokemon) {
-        var cout = getCout(pokemon.id);
-        var carte = document.createElement("div");
-        carte.className = "carte-pokemon";
-        var emoji = getTypeEmoji(pokemon.types[0].type.name);
-        
-        var btnHTML = "";
-        if (utilisateur_id) {
-            var disabled = userPoints < cout;
-            btnHTML = '<form method="POST" style="margin-top: 8px;">' +
-                '<input type="hidden" name="pokemon_id" value="' + pokemon.id + '">' +
-                '<input type="hidden" name="cout" value="' + cout + '">' +
-                '<button type="submit" class="btn-collecter" ' + (disabled ? 'disabled' : '') + '>Collecter</button>' +
-                '</form>';
-        } else {
-            btnHTML = '<p style="margin-top: 8px; color: #999;"><a href="connexion.php">Se connecter</a></p>';
-        }
-        
-        carte.innerHTML =
-            '<a href="carte.php?id=' + pokemon.id + '" style="text-decoration: none; color: inherit;">' +
-            '<img src="' + pokemon.sprites.front_default + '" alt="' + pokemon.name + '">' +
-            '<h3>' + pokemon.name + '</h3>' +
-            '<span class="type">' + emoji + '</span>' +
-            '</a>' +
-            '<span class="points">💎 ' + cout + ' pts</span>' +
-            btnHTML;
-        grille.appendChild(carte);
+    filtres = filtres.filter(function(p) {
+        return p.name.includes(rechercheActuelle.toLowerCase());
     });
+    grille.innerHTML = filtres.map(creerCarte).join("");
+    if (filtres.length === 0) {
+        grille.innerHTML = '<p class="chargement">Aucun Pokémon trouvé 😢</p>';
+    }
 }
 
 fetch("https://pokeapi.co/api/v2/pokemon?limit=50")
     .then(function(r) { return r.json(); })
     .then(function(data) {
-        var promises = data.results.map(function(p, i) {
-            return fetch("https://pokeapi.co/api/v2/pokemon/" + (i + 1))
-                .then(function(r) { return r.json(); });
+        var promises = data.results.map(function(p) {
+            return fetch(p.url).then(function(r) { return r.json(); });
         });
         return Promise.all(promises);
     })
     .then(function(pokemons) {
-        allPokemon = pokemons;
-        displayPokemon();
+        tousLesPokemons = pokemons;
+        document.getElementById("chargement").style.display = "none";
+        afficherPokemons();
     });
 
-document.querySelectorAll(".btn-filtre").forEach(function(btn) {
+document.querySelectorAll(".filtre-btn").forEach(function(btn) {
     btn.addEventListener("click", function() {
-        document.querySelectorAll(".btn-filtre").forEach(function(b) {
-            b.style.opacity = "0.6";
+        document.querySelectorAll(".filtre-btn").forEach(function(b) {
+            b.classList.remove("actif");
         });
-        this.style.opacity = "1";
-        typeFilter = this.getAttribute("data-type");
-        displayPokemon();
+        btn.classList.add("actif");
+        typeActuel = btn.dataset.type;
+        afficherPokemons();
     });
+});
+
+document.getElementById("barre-recherche").addEventListener("input", function(e) {
+    rechercheActuelle = e.target.value;
+    afficherPokemons();
 });
 </script>
 

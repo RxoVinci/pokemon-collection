@@ -26,24 +26,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 <?php require_once "includes/header.php"; ?>
 
-<div class="form-container">
-    <h1>Connexion</h1>
+<h1 class="titre-section">Connexion</h1>
 
+<form class="formulaire" method="POST" action="connexion.php">
     <?php if ($erreur) : ?>
         <div class="erreur"><?= $erreur ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="connexion.php">
-        <label for="email-connexion">Email</label>
-        <input type="email" name="email" id="email-connexion" required>
+    <label for="email-connexion">Email</label>
+    <input type="email" name="email" id="email-connexion" placeholder="sacha@pokemon.com" required>
 
-        <label for="mot_de_passe">Mot de passe</label>
-        <input type="password" name="mot_de_passe" id="mot_de_passe" required>
+    <label for="mot_de_passe">Mot de passe</label>
+    <input type="password" name="mot_de_passe" id="mot_de_passe" placeholder="Votre mot de passe" required>
 
-        <button type="submit">Se connecter</button>
+    <button type="submit" class="btn">Se connecter</button>
 
-        <p class="lien">Pas encore de compte ? <a href="inscription.php">S'inscrire</a></p>
-    </form>
-</div>
+    <p class="lien">Pas encore de compte ? <a href="inscription.php">S'inscrire</a></p>
+</form>
 
 <?php require_once "includes/footer.php"; ?>

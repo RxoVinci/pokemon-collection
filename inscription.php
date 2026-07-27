@@ -28,31 +28,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 <?php require_once "includes/header.php"; ?>
 
-<div class="form-container">
-    <h1>Inscription</h1>
+<h1 class="titre-section">Inscription</h1>
 
+<form class="formulaire" method="POST" action="inscription.php">
     <?php if ($erreur) : ?>
         <div class="erreur"><?= $erreur ?></div>
     <?php endif; ?>
-
     <?php if ($succes) : ?>
         <div class="succes"><?= $succes ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="inscription.php">
-        <label for="pseudo">Pseudo</label>
-        <input type="text" name="pseudo" id="pseudo" required>
+    <label for="pseudo">Pseudo</label>
+    <input type="text" name="pseudo" id="pseudo" placeholder="Sacha" required>
 
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" required>
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" placeholder="sacha@pokemon.com" required>
 
-        <label for="mot_de_passe">Mot de passe</label>
-        <input type="password" name="mot_de_passe" id="mot_de_passe" required>
+    <label for="mot_de_passe">Mot de passe</label>
+    <input type="password" name="mot_de_passe" id="mot_de_passe" placeholder="Au moins 6 caractères" required>
 
-        <button type="submit">S'inscrire</button>
+    <button type="submit" class="btn">S'inscrire</button>
 
-        <p class="lien">Déjà un compte ? <a href="connexion.php">Se connecter</a></p>
-    </form>
-</div>
+    <p class="lien">Déjà un compte ? <a href="connexion.php">Se connecter</a></p>
+</form>
 
 <?php require_once "includes/footer.php"; ?>

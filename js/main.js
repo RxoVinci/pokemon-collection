@@ -43,3 +43,19 @@ if (champEmail) {
         localStorage.setItem("email_connexion", champEmail.value);
     });
 }
+
+var profilBtn = document.getElementById("profil-btn");
+var profilDropdown = document.getElementById("profil-dropdown");
+
+if (profilBtn) {
+    profilBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        profilDropdown.classList.toggle("ouvert");
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!profilDropdown.contains(e.target) && e.target !== profilBtn) {
+            profilDropdown.classList.remove("ouvert");
+        }
+    });
+}

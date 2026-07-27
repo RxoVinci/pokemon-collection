@@ -21,42 +21,72 @@ if ($utilisateur_id) {
 if ($utilisateur_id && $_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["pokemon_id"])) {
     $pokemon_id = intval($_POST["pokemon_id"]);
     $cout = intval($_POST["cout"]);
-    if ($userPoints >= $cout) {
+
+    $deja = $pdo->prepare("SELECT id FROM collections WHERE utilisateur_id = ? AND pokemon_id = ?");
+    $deja->execute([$utilisateur_id, $pokemon_id]);
+
+    if ($deja->fetch()) {
+        $message = "Tu as déjà cette carte dans ton stuff.";
+    } elseif ($userPoints < $cout) {
+        $message = "Pas assez de points.";
+    } else {
         $ins = $pdo->prepare("INSERT INTO collections (utilisateur_id, pokemon_id) VALUES (?, ?)");
         $ins->execute([$utilisateur_id, $pokemon_id]);
         $upd = $pdo->prepare("UPDATE utilisateurs SET points = points - ? WHERE id = ?");
         $upd->execute([$cout, $utilisateur_id]);
         $userPoints -= $cout;
         $message = "Carte collectée avec succès !";
-    } else {
-        $message = "Pas assez de points.";
     }
+}
+
+$dejaPossede = false;
+if ($utilisateur_id) {
+    $verif = $pdo->prepare("SELECT id FROM collections WHERE utilisateur_id = ? AND pokemon_id = ?");
+    $verif->execute([$utilisateur_id, isset($_GET["id"]) ? intval($_GET["id"]) : 1]);
+    $dejaPossede = $verif->fetch() ? true : false;
 }
 
 $id = isset($_GET["id"]) ? intval($_GET["id"]) : 1;
 ?>
 <?php require_once "includes/header.php"; ?>
 
+<?php if ($utilisateur_id) : ?>
+    <div class="points-mini">Points : <?= $userPoints ?> / 7000</div>
+<?php endif; ?>
+
 <a href="catalogue.php" class="btn btn-retour">⬅ Retour au catalogue</a>
 
 <?php if ($message) : ?>
-    <div class="succes"><?= $message ?></div>
+    <div class="<?= strpos($message, 'succès') !== false ? 'succes' : 'erreur' ?>" style="max-width:500px;margin:0 auto 20px;"><?= $message ?></div>
 <?php endif; ?>
 
 <p class="chargement" id="chargement">Chargement du Pokémon...</p>
 <div class="detail" id="detail"></div>
 
 <script>
+var traductionTypes = {
+    "fire": "Feu", "water": "Eau", "grass": "Plante", "electric": "Électrique",
+    "ice": "Glace", "fighting": "Combat", "poison": "Poison", "ground": "Sol",
+    "flying": "Vol", "psychic": "Psy", "bug": "Insecte", "rock": "Roche",
+    "ghost": "Spectre", "dragon": "Dragon", "dark": "Ténèbres", "steel": "Acier",
+    "fairy": "Fée", "normal": "Normal"
+};
+
 var idPokemon = <?= $id ?>;
 var utilisateur_id = <?= json_encode($utilisateur_id) ?>;
 var userPoints = <?= json_encode($userPoints) ?>;
+var dejaPossede = <?= json_encode($dejaPossede) ?>;
 
 function getCout(id) {
-    if (id % 25 === 0) return 15000;
-    if (id % 10 === 0) return 8000;
+    if (id === 6 || id === 9 || id === 3 || id === 149) return 15000;
+    if (id === 130 || id === 131 || id === 143) return 12000;
+    if (id === 65 || id === 68 || id === 94) return 8000;
+    if (id === 25 || id === 26 || id === 59) return 5000;
+    if (id % 7 === 0) return 3500;
     if (id % 5 === 0) return 3000;
     if (id % 3 === 0) return 2000;
-    return 500;
+    if (id % 2 === 0) return 1500;
+    return 800;
 }
 
 fetch("https://pokeapi.co/api/v2/pokemon/" + idPokemon)
@@ -65,7 +95,8 @@ fetch("https://pokeapi.co/api/v2/pokemon/" + idPokemon)
         document.getElementById("chargement").style.display = "none";
         var image = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + pokemon.id + ".png";
         var badgesTypes = pokemon.types.map(function(t) {
-            return '<span class="type-badge type-' + t.type.name + '">' + t.type.name + '</span>';
+            var typeFR = traductionTypes[t.type.name] || t.type.name;
+            return '<span class="type-badge type-' + t.type.name + '">' + typeFR + '</span>';
         }).join("");
         var hp = pokemon.stats[0].base_stat;
         var attaque = pokemon.stats[1].base_stat;
@@ -74,19 +105,24 @@ fetch("https://pokeapi.co/api/v2/pokemon/" + idPokemon)
         var taille = pokemon.height / 10;
         var poids = pokemon.weight / 10;
         var cout = getCout(pokemon.id);
-        
+
         var btnCollecter = "";
         if (utilisateur_id) {
-            var disabled = userPoints < cout ? "disabled" : "";
-            btnCollecter = '<form method="POST" style="margin-top:20px;">' +
-                '<input type="hidden" name="pokemon_id" value="' + pokemon.id + '">' +
-                '<input type="hidden" name="cout" value="' + cout + '">' +
-                '<button type="submit" class="btn-collecter" ' + disabled + '>💎 Collecter (' + cout + ' pts)</button>' +
-                '</form>';
+            if (dejaPossede) {
+                btnCollecter = '<button class="btn-collecter" disabled style="margin-top:20px;">Déjà dans ton stuff</button>';
+            } else if (userPoints < cout) {
+                btnCollecter = '<button class="btn-collecter" disabled style="margin-top:20px;">Points insuffisants (' + cout + ' pts)</button>';
+            } else {
+                btnCollecter = '<form method="POST" style="margin-top:20px;">' +
+                    '<input type="hidden" name="pokemon_id" value="' + pokemon.id + '">' +
+                    '<input type="hidden" name="cout" value="' + cout + '">' +
+                    '<button type="submit" class="btn-collecter">Collecter (' + cout + ' pts)</button>' +
+                    '</form>';
+            }
         } else {
             btnCollecter = '<p style="margin-top:20px;"><a href="connexion.php" style="color:var(--accent-2);">Connecte-toi pour collecter</a></p>';
         }
-        
+
         document.getElementById("detail").innerHTML =
             '<img src="' + image + '" alt="' + pokemon.name + '">' +
             '<div class="detail-infos">' +

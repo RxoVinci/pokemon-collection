@@ -599,3 +599,107 @@ footer p:first-child {
         height: 220px;
     }
 }
+
+.header-droite {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.theme-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+}
+
+.profil-menu {
+    position: relative;
+}
+
+.profil-btn {
+    background: none;
+    border: 2px solid var(--accent-2);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--texte);
+    transition: transform 0.3s;
+}
+
+.profil-btn:hover {
+    transform: scale(1.05);
+}
+
+.profil-dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: var(--carte);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px var(--ombre);
+    min-width: 200px;
+    padding: 8px 0;
+    z-index: 20;
+}
+
+.profil-dropdown.ouvert {
+    display: block;
+}
+
+.profil-dropdown a {
+    display: block;
+    padding: 10px 18px;
+    color: var(--texte);
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.profil-dropdown a:hover {
+    background-color: var(--fond);
+}
+
+.profil-dropdown .deconnexion-lien {
+    border-top: 1px solid var(--fond);
+    color: var(--accent);
+    margin-top: 5px;
+}
+
+.points-mini {
+    text-align: right;
+    color: var(--accent-2);
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+.onglets-auth {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.onglet {
+    padding: 10px 25px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: var(--texte-gris);
+    background-color: var(--carte);
+    font-weight: 600;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.onglet:hover {
+    color: var(--texte);
+}
+
+.onglet.actif {
+    background-color: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
